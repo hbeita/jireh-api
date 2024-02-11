@@ -1,0 +1,33 @@
+# docker-compose.yml
+
+version: '1.0'
+
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: jireh-api-db
+      POSTGRES_USER: jireh-admin
+      POSTGRES_PASSWORD: jireh
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://jireh-admin:jireh@db:5432/jireh-api-db
+      RAILS_MASTER_KEY: <%= ENV['RAILS_MASTER_KEY'] %>
+    volumes:
+      - .:/app
+      - ./config/master.key:/app/config/master.key
+    stdin_open: true
+
+volumes:
+  postgres_data:
