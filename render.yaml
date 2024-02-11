@@ -1,7 +1,7 @@
 databases:
-  - name: jireh-api
-    databaseName: jireh-api
-    user: jireh-admin
+  - name: jireh-db
+    databaseName: jirehdb
+    user: jhadmin
     plan: free
 
 services:
@@ -15,7 +15,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: jireh-api
+          name: jireh-db
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
